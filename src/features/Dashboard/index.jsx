@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
+import productApi from "../../api/productApi";
 import Main from "../../components/MainLayouts/components/main";
-import NewProducts from "../Product/components/NewProducts";
-import PopularCategories from "../Product/components/PopularCategories";
-import productApi from "../../api/productApi"
+import NewProducts from "./components/NewProducts";
+import ProductSkeleton from '../Product/components/Skeleton/ProductSkeleton';
 
 function Dashboard() {
     const [newProducts, setNewProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
+
     useEffect(() => {
         (async () => {
             try {
@@ -21,11 +21,15 @@ function Dashboard() {
         })();
     }, []);
     return (
-        <Main>
+        <Main >
+            {loading ? (
+                <ProductSkeleton length={12}/>
+            ) : null}
             {/* <PopularCategories/> */}
-            <NewProducts dataNewProducts={newProducts}/>
+            <NewProducts dataNewProducts={newProducts} />
         </Main>
     );
+    
 }
 
 export default Dashboard;

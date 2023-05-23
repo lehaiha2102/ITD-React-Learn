@@ -1,10 +1,16 @@
-import React, { useState } from "react";
-import { IconButton, Menu, MenuItem } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Button, IconButton, Menu, MenuItem } from "@mui/material";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { cartItemCountSelector, cartTotalSelector } from "../selectors";
 
 function DialogCart() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
+  const cartItemsCount = useSelector(cartItemCountSelector);
+  const cartTotal = useSelector(cartTotalSelector);
+  const navigate = useNavigate()
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -15,11 +21,15 @@ function DialogCart() {
     setOpen(false);
   };
 
+  const handleCartClick = () => {
+    navigate('/cart')
+  }
+
   return (
     <div id="top-cart" className="header-misc-icon d-none d-sm-block">
       <IconButton id="top-cart-trigger" onClick={handleOpen}>
         <ShoppingCartIcon />
-        <span className="top-cart-number">5</span>
+        <span className="top-cart-number">{cartItemsCount}</span>
       </IconButton>
       <div className="top-cart-content">
         <div className="top-cart-title">
@@ -52,6 +62,12 @@ function DialogCart() {
               <div className="top-cart-item-quantity">x 2</div>
             </div>
           </MenuItem>
+          <div className="top-cart-action">
+          <span className="top-checkout-price">{cartTotal}</span>
+          <Button className="button button-3d button-small m-0" onClick={handleCartClick}>
+            View Cart
+          </Button>
+        </div>
         </Menu>
       </div>
     </div>
