@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 ProductItem.propTypes = {
   product: PropTypes.object,
@@ -8,8 +9,9 @@ ProductItem.propTypes = {
 };
 
 function ProductItem({ product, image }) {
+  const navigate = useNavigate();
   const handleDetailClick = () => {
-    window.location.href = `/products/${product.slug}`;
+    navigate(`/products/${product.slug}`);
   };
 
   return (

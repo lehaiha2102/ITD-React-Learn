@@ -9,7 +9,7 @@ function ProductInfo({ product }) {
     currency: "VND",
   });
 
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
 
   const hanldeAddToCartSubmit = (values) => {
     const actions = addToCartForm({
@@ -17,9 +17,8 @@ function ProductInfo({ product }) {
       product,
       quantity: values.quantity,
     });
-    dispath(actions);
+    dispatch(actions);
   };
-
   return (
     <>
       <div className="d-flex align-items-center justify-content-between">

@@ -14,6 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DialogCart from "../../../features/Cart/components/DialogCart";
+import { Link } from "react-router-dom";
 
 const MODE = {
   LOGIN: "login",
@@ -106,12 +107,12 @@ function Header() {
               {/* Logo
 						============================================= */}
               <div id="logo" className="me-lg-4">
-                <a href="demo-shop.html" className="standard-logo">
+                <Link to="/" className="standard-logo">
                   <img src={Logo} alt="Canvas Logo" />
-                </a>
-                <a href="demo-shop.html" className="retina-logo">
+                </Link>
+                <Link to="/" className="retina-logo">
                   <img src={Logo} alt="Canvas Logo" />
-                </a>
+                </Link>
               </div>
               {/* #logo end */}
               <div className="header-misc">

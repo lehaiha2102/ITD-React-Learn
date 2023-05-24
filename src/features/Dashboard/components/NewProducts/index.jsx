@@ -2,6 +2,7 @@ import { Box, Button, Grid } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
 import ProductItem from "./ProductItem";
+import { useNavigate } from "react-router-dom";
 
 NewProducts.propTypes = {
   dataNewProducts: PropTypes.array,
@@ -12,8 +13,9 @@ NewProducts.defaultProps = {
 };
 
 function NewProducts({ dataNewProducts }) {
+  const navigate = useNavigate();
   const handleShowMoreClick = () => {
-    window.location.href = `/products/new`;
+    navigate(`/products/new`);
   }
   return (
     <div>
