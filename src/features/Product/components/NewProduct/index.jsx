@@ -38,8 +38,6 @@ function NewProductsList({ dataNewProducts }) {
                 setManufacturersSort(manufacturers);
                 setProductList(dataNewProducts);
                 setTotalPage(last_page);
-                console.log(dataNewProducts.category_names)
-                console.log(dataNewProducts)
             } catch (error) {
                 console.log('Failed to fetch product list: ', error);
             }

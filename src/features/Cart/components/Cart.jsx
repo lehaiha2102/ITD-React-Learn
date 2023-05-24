@@ -21,16 +21,15 @@ function ProductsListCart() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
-  const rows = cartItems.map((item) =>
-    createData(
-      item.product?.images ? JSON.parse(item.product.images)[0] : null,
-      item.product?.name || "",
-      item.quantity,
-      item.product?.price || 0,
-      item.quantity * item.product?.price || 0,
-      item.slug
-    )
-  );
+  const rows = cartItems.map((item) => ({
+    image: item.product?.images ? JSON.parse(item.product.images)[0] : null,
+    name: item.product?.name || "",
+    quantity: item.quantity,
+    price: item.product?.price || 0,
+    total: item.quantity * item.product?.price || 0,
+    slug: item.slug,
+  }));
+  
 
   const total = rows.reduce((accumulator, row) => accumulator + row.total, 0);
 
@@ -39,6 +38,7 @@ function ProductsListCart() {
   };
 
   const handleQuantityChange = (slug, newQuantity) => {
+    console.log('slug:', slug, 'quantity:', newQuantity)
     dispatch(setQuantity({ slug, quantity: newQuantity }));
   };
 

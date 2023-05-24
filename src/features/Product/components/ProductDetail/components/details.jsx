@@ -1,9 +1,11 @@
 import { useState } from "react";
 import AddToCartForm from "../../../../Cart/components/AddToCartForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCartForm } from "../../../../Cart/cartSlice";
 
 function ProductInfo({ product }) {
+  const currentUser = useSelector((state) => state.user.current);
+console.log(currentUser)
   const formatter = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -30,7 +32,7 @@ function ProductInfo({ product }) {
         </div>
       </div>
       <div className="line line-sm" />
-      <AddToCartForm product={product} onSubmit={hanldeAddToCartSubmit} />
+      <AddToCartForm product={product} onSubmit={hanldeAddToCartSubmit}  disabled={!currentUser.id}/>
       <div className="line line-sm" />
       <div
         data-readmore="true"

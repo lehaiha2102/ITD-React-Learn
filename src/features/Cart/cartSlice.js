@@ -1,8 +1,12 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   showMiniCart: false,
   cartItems: JSON.parse(localStorage.getItem("cart")) || [],
+};
+
+const saveCartToLocalStorage = (cartItems) => {
+  localStorage.setItem("cart", JSON.stringify(cartItems));
 };
 
 const cartSlice = createSlice({
@@ -24,8 +28,7 @@ const cartSlice = createSlice({
         state.cartItems.push(item);
       }
 
-      // Save cart items to localStorage
-      localStorage.setItem("cart", JSON.stringify(state.cartItems));
+      saveCartToLocalStorage(state.cartItems); // Cập nhật giỏ hàng trong localStorage
     },
     setQuantity(state, action) {
       const { slug, quantity } = action.payload;
@@ -34,18 +37,16 @@ const cartSlice = createSlice({
         state.cartItems[index].quantity = quantity;
       }
 
-      // Save cart items to localStorage
-      localStorage.setItem("cart", JSON.stringify(state.cartItems));
+      saveCartToLocalStorage(state.cartItems); // Cập nhật giỏ hàng trong localStorage
     },
     removeItemCart(state, action) {
       const slugNeedToRemove = action.payload;
       state.cartItems = state.cartItems.filter(
         (x) => x.slug !== slugNeedToRemove
       );
-    
-      // Save cart items to localStorage
-      localStorage.setItem("cart", JSON.stringify(state.cartItems));
-    },    
+
+      saveCartToLocalStorage(state.cartItems); // Cập nhật giỏ hàng trong localStorage
+    },
   },
 });
 
