@@ -56,23 +56,6 @@ function Header() {
     navigate(`/products/search/${keyword}`)
   };
 
-  // useEffect(() => {
-  //   if (keyword) {
-  //     (async () => {
-  //       try {
-  //         const data = await productApi.search(keyword);
-  //         const dataSearch = data.data;
-  //         if (dataSearch) {
-  //           navigate(`/products/search/${keyword}`, { searchData: dataSearch });
-  //           console.log(dataSearch);
-  //         }
-  //       } catch (error) {
-  //         console.log("Failed to fetch product list: ", error);
-  //       }
-  //     })();
-  //   }
-  // }, [keyword]);
-
   return (
     <div>
       <Dialog
