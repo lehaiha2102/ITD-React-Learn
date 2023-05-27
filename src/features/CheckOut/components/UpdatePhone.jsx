@@ -9,7 +9,30 @@ import "react-toastify/dist/ReactToastify.css";
 import * as yup from "yup";
 import MyInputField from "../../../components/form-controls/InputField";
 import { TextField } from "@mui/material";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import productApi from "../../../api/productApi";
+
 function UpdatePhone() {
+  const currentUser = useSelector((state) => state.user.current);
+  const [phone, setPhone] = useState('');
+
+  const handleChangePhone = (e) => {
+    setPhone(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    useEffect(() => {
+      (async () => {
+        try {
+          const phone = await productApi.changePhone(currentUser.id, phone);
+        } catch (error) {
+          console.log("Failed to change shipping phone: ", error);
+        }
+      })();
+    },[])
+  };
+
   return (
     <div>
       <Box
@@ -27,11 +50,15 @@ function UpdatePhone() {
           Update Contact Number
         </Typography>
         <Box paddingTop={3}>
-          <form>
+          <form onSubmit={handleSubmit}>
             <Box textAlign="center" display="flex" justifyContent="center">
               <TextField
-                value="Change phone number here"
-                style={{ border: "none" }}
+                id="outlined-basic"
+                label="Your Phone"
+                name="phoneNumber"
+                variant="outlined"
+                value={phone}
+                onChange={handleChangePhone}
               />
               <Button
                 style={{
@@ -39,6 +66,7 @@ function UpdatePhone() {
                   color: "#ffffff",
                   border: "none",
                 }}
+                type="submit"
               >
                 Update
               </Button>

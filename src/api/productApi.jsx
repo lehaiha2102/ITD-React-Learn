@@ -21,6 +21,14 @@ const productApi = {
     const url = '/product/search';
     const data = { keyword };
     return axiosClient.post(url, data);
+  },
+  getAddress(user_id){
+    const url = `/product/shipping/${user_id}/address`;
+    return axiosClient.get(url);
+  },
+  changePhone(user_id, phone){
+    const url = `/product/shipping/${user_id}/change-phone`;
+    return axiosClient.post(url, phone);
   }
 };
 export default productApi;

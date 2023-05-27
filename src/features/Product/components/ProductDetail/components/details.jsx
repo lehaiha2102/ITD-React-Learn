@@ -5,7 +5,6 @@ import { addToCartForm } from "../../../../Cart/cartSlice";
 
 function ProductInfo({ product }) {
   const currentUser = useSelector((state) => state.user.current);
-console.log(currentUser)
   const formatter = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",

@@ -7,7 +7,6 @@ import LooksOneIcon from "@mui/icons-material/LooksOne";
 import LooksTwoIcon from "@mui/icons-material/LooksTwo";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-
 import {
   Box,
   Button,
@@ -17,16 +16,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UpdatePhone from "./UpdatePhone";
 import UpdateAddress from "./UpdateAddress";
 import DeleteAddress from "./DeleteAddress";
 import Payment from "./Payment";
 import DeliverySchedule from "./DeliverySchedule";
+import { useSelector } from "react-redux";
+import ShippingAddress from "./Address";
+import productApi from "../../../api/productApi";
 
 function InFoCheckout() {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const currentUser = useSelector((state) => state.user.current);
+  const [loading, setLoading] = useState(true);
+  const [addressList, setAddressList] = useState([]);
 
   const handleUpdatePhoneClickOpen = () => {
     setOpen(true);
@@ -45,6 +50,20 @@ function InFoCheckout() {
     setOpen(true);
     setSelectedItem("deleteAddress");
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const address = await productApi.getAddress(currentUser.id);
+        console.log(address)
+        setAddressList(address);
+      } catch (error) {
+        console.log("Failed to fetch product list: ", error);
+      }
+  
+      setLoading(false);
+    })();
+  }, []);
 
   return (
     <Grid container spacing={1} paddingTop={5}>
@@ -84,8 +103,14 @@ function InFoCheckout() {
                 <TextField
                   id="outlined-basic"
                   label=""
+                  defaultValue={currentUser.phone}
                   variant="outlined"
-                  style={{ minWidth: "70%" }}
+                  style={{
+                    minWidth: "70%",
+                  }}
+                  inputProps={{
+                    style: { color: "#000000", fontWeight: "bold" },
+                  }}
                   disabled
                 />
               </Box>
@@ -120,15 +145,12 @@ function InFoCheckout() {
                 </Box>
               </Box>
               <Box display="flex" paddingBottom={3} paddingLeft={3}>
-                <TextField
-                  id="outlined-basic"
-                  label=""
-                  variant="outlined"
-                  style={{ minWidth: "70%" }}
-                  disabled
-                />
-                <Box paddingLeft={3} paddingTop={1}>
-                  <IconButton style={{ color: "#1abc9c" }} onClick={handleAddNewAddressClickOpen}>
+              <ShippingAddress data={addressList}/>
+                {/* <Box paddingLeft={3} paddingTop={1}>
+                  <IconButton
+                    style={{ color: "#1abc9c" }}
+                    onClick={handleAddNewAddressClickOpen}
+                  >
                     <EditIcon />
                   </IconButton>
                   <IconButton
@@ -137,7 +159,7 @@ function InFoCheckout() {
                   >
                     <HighlightOffIcon />
                   </IconButton>
-                </Box>
+                </Box> */}
               </Box>
             </Box>
           </Paper>
@@ -170,24 +192,7 @@ function InFoCheckout() {
                 </Box>
               </Box>
               <Box display="flex" paddingBottom={3} paddingLeft={3}>
-                <TextField
-                  id="outlined-basic"
-                  label=""
-                  variant="outlined"
-                  style={{ minWidth: "70%" }}
-                  disabled
-                />
-                <Box paddingLeft={3} paddingTop={1}>
-                  <IconButton style={{ color: "#1abc9c" }} onClick={handleAddNewAddressClickOpen}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    style={{ color: "#ff0000" }}
-                    onClick={handleDeleteAddressClick}
-                  >
-                    <HighlightOffIcon />
-                  </IconButton>
-                </Box>
+                <ShippingAddress data={addressList}/>
               </Box>
             </Box>
           </Paper>
@@ -207,7 +212,7 @@ function InFoCheckout() {
                 </Box>
               </Box>
               <Box display="flex" paddingBottom={3} paddingLeft={3}>
-                <DeliverySchedule/>
+                <DeliverySchedule />
               </Box>
             </Box>
           </Paper>
@@ -231,11 +236,13 @@ function InFoCheckout() {
           </div>
         </Box>
         <Payment />
-        <Box textAlign="center"
-        display="flex"
-        justifyContent="center"
-        paddingTop={3}>
-        <Button className="button button-3d float-end">Place Order</Button>
+        <Box
+          textAlign="center"
+          display="flex"
+          justifyContent="center"
+          paddingTop={3}
+        >
+          <Button className="button button-3d float-end">Place Order</Button>
         </Box>
       </Grid>
       <Dialog
