@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { Box, Grid } from '@mui/material';
-import AddressItem from './AddressItem';
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { Box, Grid } from "@mui/material";
+import AddressItem from "./AddressItem";
 
 ShippingAddress.propTypes = {
   data: PropTypes.array,
@@ -11,7 +11,7 @@ ShippingAddress.defaultProps = {
   data: [],
 };
 
-function ShippingAddress({ data }) {
+function ShippingAddress({ data, onAddressSelect }) {
   if (!Array.isArray(data)) {
     return null;
   }
@@ -20,6 +20,7 @@ function ShippingAddress({ data }) {
 
   const handleAddressSelect = (address) => {
     setSelectedAddress(address);
+    onAddressSelect(address);
   };
 
   return (
@@ -33,7 +34,7 @@ function ShippingAddress({ data }) {
                   address={address}
                   selectedAddress={selectedAddress}
                   onAddressSelect={handleAddressSelect}
-                /> 
+                />
               </Box>
             </Grid>
           );

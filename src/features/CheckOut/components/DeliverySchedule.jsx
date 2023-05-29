@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 
-function DeliverySchedule() {
-  const [selectedTime, setSelectedTime] = useState("Morning");
+function DeliverySchedule({ onTimeChange }) {
+  const [selectedTime, setSelectedTime] = useState("");
 
   const handleTimeChange = (time) => {
     setSelectedTime(time);
+    onTimeChange(time);
   };
+
 
   return (
     <Box textAlign="center" display="flex" justifyContent="center">

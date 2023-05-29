@@ -29,6 +29,10 @@ const productApi = {
   changePhone(user_id, phone){
     const url = `/product/shipping/${user_id}/change-phone`;
     return axiosClient.post(url, phone);
+  },
+  creatAddress(user_id, address){
+    const url = `/product/shipping/${user_id}/create-address`;
+    return axiosClient.post(url, address);
   }
 };
 export default productApi;

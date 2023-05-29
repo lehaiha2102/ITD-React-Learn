@@ -1,40 +1,51 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import PhoneIcon from "@mui/icons-material/Phone";
+import PlaceIcon from "@mui/icons-material/Place";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import * as yup from "yup";
+import productApi from "../../../api/productApi";
 import MyInputField from "../../../components/form-controls/InputField";
-import { TextField } from "@mui/material";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import PlaceIcon from "@mui/icons-material/Place";
-import MyPasswordField from "../../../components/form-controls/PasswordField";
-function UpdateAddress() {
+
+function UpdateAddress({ handleClose }) {
+  const [address, setAddress] = useState("");
+  const currentUser = useSelector((state) => state.user.current);
   const schema = yup
     .object({
-        title: yup
-        .string()
-        .required("Please enter title"),
-        address: yup
-        .string()
-        .required("Please enter address"),
+      address: yup.string().required("Please enter address"),
     })
     .required();
 
   const form = useForm({
     defaultValues: {
-      title: "",
       address: "",
     },
     resolver: yupResolver(schema),
   });
+
+  const handleChangeAddress = (e) => {
+    setAddress(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    const { address } = form.getValues();
+    try {
+      const response = await productApi.creatAddress(currentUser.id, {
+        address: address,
+      });
+      setAddress(response);
+      handleClose();
+      console.log('success')
+    } catch (error) {
+      console.log("Failed to change shipping address: ", error);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -52,35 +63,34 @@ function UpdateAddress() {
         Add New Address
       </Typography>
       <Box paddingTop={3} maxWidth="400px">
-        <form>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <Box>
-            <FormControl>
-              <FormLabel>Type</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                <FormControlLabel
-                  value="Billing"
-                  control={<Radio />}
-                  label="Billing"
-                />
-                <FormControlLabel
-                  value="Shipping"
-                  control={<Radio />}
-                  label="Shipping"
-                />
-              </RadioGroup>
-            </FormControl>
+            <MyInputField
+              name="address"
+              label="ADDRESS"
+              form={form}
+              onChange={handleChangeAddress}
+            />
           </Box>
-          <Box>
-            <MyInputField name="title" label="TITLE" form={form} />
+          <Box textAlign="center" paddingTop={3}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Add Address
+            </Button>
+            <Button
+              onClick={handleClose}
+              variant="contained"
+              size="large"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Close
+            </Button>
           </Box>
-          <Box>
-            <MyInputField name="address" label="ADDRESS" form={form} />
-          </Box>
-          <Button>Create</Button>
         </form>
       </Box>
     </Box>

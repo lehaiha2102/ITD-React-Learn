@@ -1,38 +1,40 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import PhoneIcon from "@mui/icons-material/Phone";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useForm } from "react-hook-form";
-import "react-toastify/dist/ReactToastify.css";
-import * as yup from "yup";
-import MyInputField from "../../../components/form-controls/InputField";
-import { TextField } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import productApi from "../../../api/productApi";
+import { useSelector } from "react-redux";
+import { TextField } from "@mui/material";
 
-function UpdatePhone() {
+function UpdatePhone({ handleClose, updatePhoneNumber }) {
   const currentUser = useSelector((state) => state.user.current);
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState("");
 
   const handleChangePhone = (e) => {
     setPhone(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    useEffect(() => {
-      (async () => {
-        try {
-          const phone = await productApi.changePhone(currentUser.id, phone);
-        } catch (error) {
-          console.log("Failed to change shipping phone: ", error);
-        }
-      })();
-    },[])
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
 
+    if (!phone) {
+      console.log("Phone number is required");
+      return;
+    }
+
+    try {
+      const response = await productApi.changePhone(currentUser.id, {
+        phone: phone,
+      });
+      setPhone(response);
+      updatePhoneNumber(response); 
+      handleClose();
+    } catch (error) {
+      console.log("Failed to change shipping phone: ", error);
+    }
+  };
   return (
     <div>
       <Box

@@ -32,6 +32,7 @@ function InFoCheckout() {
   const currentUser = useSelector((state) => state.user.current);
   const [loading, setLoading] = useState(true);
   const [addressList, setAddressList] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleUpdatePhoneClickOpen = () => {
     setOpen(true);
@@ -55,15 +56,30 @@ function InFoCheckout() {
     (async () => {
       try {
         const address = await productApi.getAddress(currentUser.id);
-        console.log(address)
+        const getPhone = address[0].phone;
+        setPhoneNumber(getPhone);
         setAddressList(address);
+        handleClose();
       } catch (error) {
         console.log("Failed to fetch product list: ", error);
       }
-  
       setLoading(false);
     })();
   }, []);
+
+  const handleUpdatePhoneNumber = (newPhoneNumber) => {
+    setPhoneNumber(newPhoneNumber);
+  };
+
+  const handleSelectedAddress = (address) => {
+    // Xử lý giá trị địa chỉ được chọn ở đây
+    console.log("Địa chỉ được chọn:", address.address);
+  };
+
+  const handleSelectedTime = (time) => {
+    // Xử lý giá trị thời gian được chọn ở đây
+    console.log("Thời gian được chọn:", time);
+  };
 
   return (
     <Grid container spacing={1} paddingTop={5}>
@@ -103,7 +119,7 @@ function InFoCheckout() {
                 <TextField
                   id="outlined-basic"
                   label=""
-                  defaultValue={currentUser.phone}
+                  value={phoneNumber}
                   variant="outlined"
                   style={{
                     minWidth: "70%",
@@ -145,21 +161,10 @@ function InFoCheckout() {
                 </Box>
               </Box>
               <Box display="flex" paddingBottom={3} paddingLeft={3}>
-              <ShippingAddress data={addressList}/>
-                {/* <Box paddingLeft={3} paddingTop={1}>
-                  <IconButton
-                    style={{ color: "#1abc9c" }}
-                    onClick={handleAddNewAddressClickOpen}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    style={{ color: "#ff0000" }}
-                    onClick={handleDeleteAddressClick}
-                  >
-                    <HighlightOffIcon />
-                  </IconButton>
-                </Box> */}
+                <ShippingAddress
+                  data={addressList}
+                  onAddressSelect={handleSelectedAddress}
+                />
               </Box>
             </Box>
           </Paper>
@@ -192,7 +197,10 @@ function InFoCheckout() {
                 </Box>
               </Box>
               <Box display="flex" paddingBottom={3} paddingLeft={3}>
-                <ShippingAddress data={addressList}/>
+                <ShippingAddress
+                  data={addressList}
+                  onAddressSelect={handleSelectedAddress}
+                />
               </Box>
             </Box>
           </Paper>
@@ -212,7 +220,7 @@ function InFoCheckout() {
                 </Box>
               </Box>
               <Box display="flex" paddingBottom={3} paddingLeft={3}>
-                <DeliverySchedule />
+                <DeliverySchedule onTimeChange={handleSelectedTime} />
               </Box>
             </Box>
           </Paper>
@@ -252,8 +260,13 @@ function InFoCheckout() {
         aria-describedby="alert-dialog-description"
       >
         <DialogContent>
-          {selectedItem === "phone" && <UpdatePhone />}
-          {selectedItem === "address" && <UpdateAddress />}
+          {selectedItem === "phone" && (
+            <UpdatePhone
+              handleClose={handleClose}
+              updatePhoneNumber={handleUpdatePhoneNumber}
+            />
+          )}
+          {selectedItem === "address" && <UpdateAddress handleClose={handleClose} />}
           {selectedItem === "deleteAddress" && <DeleteAddress />}
           {/* ... */}
         </DialogContent>
